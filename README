@@ -1,0 +1,93 @@
+A . How to Test
+ Include endpoints for uploading and deleting files. (1 and 2)
+1. File Upload - http://localhost:8081/files/upload
+Response
+{
+    "id": 7,
+    "fileName": "compressed-13289203021006164296.jpg",
+    "fileUrl": "file:///Users/ephantus/Desktop/sftpcode-eph/filestorage/compressed-13289203021006164296.jpg",
+    "fileSize": 48906,
+    "uploadDate": "2024-09-04T20:30:26.545801"
+}
+
+2. Delete Upload - http://localhost:8081/files/5
+{
+    "code": 200,
+    "message": "success",
+}
+
+  - Provides list of all stored file's metadata - file name, url, file size, upload date (3)
+  - Provides a summary of the total number of all stored files, and total storage occupied by the stored files (4)
+
+3. File Summary Upload - http://localhost:8081/files/summary
+
+Response
+Total Files: 5, Total Storage: 407217 bytes
+
+4. File Upload - http://localhost:8081/files/metadata
+
+[
+    {
+        "id": 1,
+        "fileName": "compressed-15859815495040088065.jpg",
+        "fileUrl": "file:///Users/ephantus/Desktop/sftpcode-eph/filestorage/compressed-15859815495040088065.jpg",
+        "fileSize": 48906,
+        "uploadDate": "2024-09-04T20:06:06.398477"
+    },
+    {
+        "id": 2,
+        "fileName": "compressed-14799571041920407192.jpg",
+        "fileUrl": "file:///Users/ephantus/Desktop/sftpcode-eph/filestorage/compressed-14799571041920407192.jpg",
+        "fileSize": 48906,
+        "uploadDate": "2024-09-04T20:07:05.438828"
+    },
+    {
+        "id": 3,
+        "fileName": "compressed-12700707393587864188.jpg",
+        "fileUrl": "file:///Users/ephantus/Desktop/sftpcode-eph/filestorage/compressed-12700707393587864188.jpg",
+        "fileSize": 48906,
+        "uploadDate": "2024-09-04T20:13:49.765259"
+    },
+    {
+        "id": 4,
+        "fileName": "compressed-8204457988798821169.jpg",
+        "fileUrl": "file:///Users/ephantus/Desktop/sftpcode-eph/filestorage/compressed-8204457988798821169.jpg",
+        "fileSize": 211593,
+        "uploadDate": "2024-09-04T20:26:22.621495"
+    },
+
+]
+
+
+
+B. How Caching has been implemented
+
+
+Adding Cache Dependencies
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-cache</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.ehcache</groupId>
+    <artifactId>ehcache</artifactId>
+</dependency>
+
+ 2. Enable Caching in the Application
+
+@SpringBootApplication
+@EnableCaching
+public class FileServerApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(FileServerApplication.class, args);
+    }
+}
+
+3. File Service
+
+- @Cacheable(""): This annotation tells Spring to cache the result of the `getFileSummary()` method. The first time the method is called, the result is stored in the cache with the key "fileSummary". Subsequent calls with the same parameters will return the cached result instead of executing the method again.
+
+
+C. Jar file location ./target/xxxxxxx.jar
+D. Images uploaded -> filestorage /
